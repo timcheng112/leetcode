@@ -1,0 +1,25 @@
+// https://leetcode.com/problems/delete-characters-to-make-fancy-string/?envType=daily-question&envId=2025-07-21
+// Time: O(n)
+// Space: O(n)
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var makeFancyString = function (s) {
+    if (s.length <= 2) return s;
+    let fancy = "";
+    for (let i = 0; i < s.length; i++) {
+        let consecutiveCount = 1;
+        while (s.charAt(i) === s.charAt(i + 1)) {
+            consecutiveCount++;
+            i++;
+        }
+        if (consecutiveCount === 1) {
+            fancy += s.charAt(i);
+        } else {
+            fancy += s.charAt(i) + s.charAt(i);
+        }
+    }
+    return fancy;
+};
