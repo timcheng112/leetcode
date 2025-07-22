@@ -1,0 +1,40 @@
+// https://leetcode.com/problems/maximum-erasure-value/?envType=daily-question&envId=2025-07-22
+// Time: O(n), at most two visits to each element.
+// Space: O(n), if all elements in the array are unique, the map can contain n elements.
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maximumUniqueSubarray = function (nums) {
+    if (nums.length === 1) return nums[0];
+    const subarray = new Map();
+    subarray.set(nums[0], 0);
+    let start = 0;
+    let end = 1;
+    let max = nums[0];
+    let currSum = nums[0];
+    while (end < nums.length) {
+        // subarray already contains nums[end]
+        if (subarray.has(nums[end])) {
+            let temp = start;
+            start = subarray.get(nums[end]) + 1;
+            // since nums[end] === nums[start - 1], 
+            // this minor optimisation helps to avoid an additional subtraction and addition operation
+            while (temp < start - 1) {
+                currSum -= nums[temp];
+                subarray.delete(nums[temp]);
+                temp++;
+            }
+            subarray.set(nums[end], end);
+        } else {
+            currSum += nums[end];
+            if (currSum > max) {
+                max = currSum;
+            }
+            subarray.set(nums[end], end);
+        }
+        end++;
+    }
+    return max;
+};
