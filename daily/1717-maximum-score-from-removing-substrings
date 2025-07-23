@@ -1,0 +1,65 @@
+// https://leetcode.com/problems/maximum-score-from-removing-substrings/?envType=daily-question&envId=2025-07-23
+// Time: O(n)
+// Space: O(n)
+
+/**
+ * @param {string} s
+ * @param {number} x
+ * @param {number} y
+ * @return {number}
+ */
+var maximumGain = function (s, x, y) {
+    let higher = x > y ? "ab" : "ba";
+    let lower = higher === "ab" ? "ba" : "ab";
+    let stack = [], count = 0, score = 0, i = 0, hasFirstChar = false;
+    // first pass to remove higher-scoring substring
+    while (i < s.length) {
+        if (hasFirstChar) {
+            if (s[i] === higher[1]) {
+                // pop and add to count
+                stack.pop();
+                count++;
+                hasFirstChar = stack[stack.length - 1] === higher[0];
+            } else {
+                stack.push(s[i]);
+                if (s[i] !== higher[0]) {
+                    hasFirstChar = false;
+                }
+            }
+        } else {
+            if (s[i] === higher[0]) {
+                hasFirstChar = true;
+            }
+            stack.push(s[i]);
+        }
+        i++;
+    }
+    
+    score = x > y ? x * count : y * count
+    count = 0, i = 0, hasFirstChar = false;
+    s = stack.join("")
+    // second pass to remove lower-scoring substring
+    while (i < s.length) {
+        if (hasFirstChar) {
+            if (s[i] === lower[1]) {
+                // pop and add to count
+                stack.pop();
+                count++;
+                hasFirstChar = stack[stack.length - 1] === lower[0];
+            } else {
+                stack.push(s[i]);
+                if (s[i] !== lower[0]) {
+                    hasFirstChar = false;
+                }
+            }
+        } else {
+            if (s[i] === lower[0]) {
+                hasFirstChar = true;
+            }
+            stack.push(s[i]);
+        }
+        i++;
+    }
+    score += x < y ? x * count : y * count
+    return score;
+};
