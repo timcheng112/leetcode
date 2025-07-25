@@ -1,0 +1,23 @@
+// https://leetcode.com/problems/maximum-unique-subarray-sum-after-deletion/?envType=daily-question&envId=2025-07-25
+// Time: O(n)
+// Space: O(n)
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxSum = function (nums) {
+    const subarray = new Set();
+    let max = nums[0];
+    let curr = 0;
+    for (const num of nums) {
+        if (num > 0 && !subarray.has(num)) {
+            subarray.add(num);
+            curr += num;
+            max = Math.max(max, curr);
+        } else {
+            max = Math.max(max, num);
+        }
+    }
+    return max;
+};
