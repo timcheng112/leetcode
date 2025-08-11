@@ -1,0 +1,56 @@
+1) Sorting solution
+Time: O(nlogn)
+Space: O(n)
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number[]}
+ */
+var topKFrequent = function (nums, k) {
+    const freqs = new Map();
+    for (const num of nums) {
+        const count = freqs.has(num) ? freqs.get(num) + 1 : 1
+        freqs.set(num, count);
+    }
+    const sorted = [...freqs].sort((a, b) => a[1] - b[1])
+    const res = [];
+    for (let i = sorted.length - k; i < sorted.length; i++) {
+        res.push(sorted[i][0])
+    }
+    return res;
+};
+
+2) Bucket sort
+Time: O(n)
+Space: O(n)
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number[]}
+ */
+var topKFrequent = function (nums, k) {
+    const count = {};
+    const freqs = Array.from({ length: nums.length + 1 }, () => []);
+
+    for (const num of nums) {
+        currCount = (count[num] || 0) + 1;
+        count[num] = currCount;
+    }
+
+    for (const num in count) {
+        const freq = count[num];
+        freqs[freq - 1].push(num);
+    }
+
+    const res = [];
+    let i = freqs.length - 1;
+    while (res.length < k) {
+        for (let j = 0; j < freqs[i].length; j++) {
+            res.push(Number(freqs[i][j]));
+        }
+        i--;
+    }
+    return res;
+};
