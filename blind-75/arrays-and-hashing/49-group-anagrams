@@ -1,0 +1,27 @@
+Time: O(m*n), m and n is the length of the strs array and longest str respectively.
+Space: O(m), if all strs are of diff frequency, we would have to store all strs with diff keys -> leading to total of m number of key-value pairs.
+
+/**
+ * @param {string[]} strs
+ * @return {string[][]}
+ */
+var groupAnagrams = function (strs) {
+    const map = new Map();
+    // preprocess each str and put its frequency arr as key
+    for (str of strs) {
+        const arr = Array(26).fill(0);
+        for (let i = 0; i < str.length; i++) {
+            const charIndex = str.charCodeAt(i) - 97;
+            arr[charIndex] += 1;
+        }
+        const key = arr.toString();
+        if (map.has(key)) {
+            const val = map.get(key);
+            val.push(str);
+            map.set(key, val);
+        } else {
+            map.set(key, [str])
+        }
+    }
+    return [...map.values()]
+}
