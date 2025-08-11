@@ -1,0 +1,32 @@
+Time: O(n + m), n and m is the length of s and m respectively
+Space: O(1), at most 26 characters
+
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+var isAnagram = function(s, t) {
+    const map = new Map();
+    for (let i = 0; i < s.length; i++) {
+        const curr = s.charAt(i);
+        if (map.has(curr)) {
+            const count = map.get(curr) + 1;
+            map.set(curr, count);
+        } else {
+            map.set(curr, 1);
+        }
+    }
+    for (let i = 0; i < t.length; i++) {
+        const curr = t.charAt(i);
+        if (!map.has(curr)) return false;
+        const count = map.get(curr) - 1;
+        if (count === 0) {
+            map.delete(curr);
+        } else {
+            map.set(curr, count)
+        }
+    }
+    if (map.size > 0) return false;
+    return true;
+};
