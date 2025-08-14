@@ -1,0 +1,21 @@
+Time: O(n)
+Space: O(1)
+
+/**
+ * @param {string} num
+ * @return {string}
+ */
+var largestGoodInteger = function (num) {
+    let lastMaxGood = "";
+    for (let i = 0; i < num.length - 2; i++) {
+        if (num[i] === num[i + 1] && num[i + 1] === num[i + 2]) {
+            const currGood = num[i] + num[i + 1] + num[i + 2]
+            if (lastMaxGood === "") {
+                lastMaxGood = currGood;
+            } else {
+                lastMaxGood = Number(currGood) > Number(lastMaxGood) ? currGood : lastMaxGood;
+            }
+        }
+    }
+    return lastMaxGood;
+};
