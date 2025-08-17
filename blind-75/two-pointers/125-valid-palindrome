@@ -1,0 +1,33 @@
+Time: O(n)
+Space: O(1)
+
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isPalindrome = function (s) {
+    function isAlphanumeric(c) {
+        return (c >= 48 && c <= 57) || (c >= 97 && c <= 122);
+    }
+    let start = 0;
+    let end = s.length - 1;
+    while (start < end) {
+        const startChar = s.charAt(start).toLowerCase();
+        const endChar = s.charAt(end).toLowerCase();
+        const isStartValid = isAlphanumeric(startChar.charCodeAt(0));
+        const isEndValid = isAlphanumeric(endChar.charCodeAt(0));
+        if (isStartValid && isEndValid) {
+            if (startChar !== endChar) return false;
+            start++;
+            end--;
+        } else if (!isStartValid && !isEndValid) {
+            start++;
+            end--;
+        } else if (!isStartValid) {
+            start++;
+        } else {
+            end--;
+        }
+    }
+    return true;
+};
