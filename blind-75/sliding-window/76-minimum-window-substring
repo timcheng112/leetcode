@@ -1,0 +1,46 @@
+Time: O(n) since there are only 26 alphabets so iterating through tMap would be O(1).
+Space: O(1) auxiliary (same reasoning, tMap has at most 26 alphabets), O(n) output.
+
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {string}
+ */
+var minWindow = function (s, t) {
+    // tMap contains frequencies of all t characters
+    const tMap = new Map();
+    for (const char of t) {
+        const count = tMap.has(char) ? tMap.get(char) + 1 : 1
+        tMap.set(char, count);
+    }
+
+    let l = 0, r = 0;
+    let substring = "";
+    let hasAllChars = false;
+    while (r < s.length) {
+        // if tMap has s[r], we want to decrement the frequency of s[r] in tMap
+        // as the substring will contain s[r]
+        if (tMap.has(s[r])) {
+            const currCharFreq = tMap.get(s[r]) - 1;
+            tMap.set(s[r], currCharFreq);
+            if (currCharFreq <= 0) {
+                hasAllChars = Array.from(tMap.values()).every(val => val <= 0);
+            }
+        }
+        while (hasAllChars) {
+            if (r - l + 1 < substring.length || substring === "") {
+                substring = s.substring(l, r + 1)
+            }
+            if (tMap.has(s[l])) {
+                const currCharFreq = tMap.get(s[l]) + 1;
+                tMap.set(s[l], currCharFreq);
+                if (currCharFreq > 0) {
+                    hasAllChars = false;
+                }
+            }
+            l++;
+        }
+        r++;
+    }
+    return substring
+};
