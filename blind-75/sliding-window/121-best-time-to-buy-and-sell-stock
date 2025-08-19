@@ -1,0 +1,19 @@
+Time: O(n)
+Space: O(1)
+
+/**
+ * @param {number[]} prices
+ * @return {number}
+ */
+var maxProfit = function (prices) {
+    let max = 0;
+    let currBuy = prices[0]
+    for (let i = 1; i < prices.length; i++) {
+        if (currBuy < prices[i]) {
+            max = Math.max(prices[i] - currBuy, max)
+        } else {
+            currBuy = prices[i]
+        }
+    }
+    return max;
+};
