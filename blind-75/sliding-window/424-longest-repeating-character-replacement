@@ -1,0 +1,37 @@
+Time: O(n)
+Space: O(1), since at most the Map will hold 26 alphabets
+
+/**
+ * @param {string} s
+ * @param {number} k
+ * @return {number}
+ */
+var characterReplacement = function (s, k) {
+    let l = 0, r = 0;
+    const freqs = new Map();
+    let currHighestFreq = 0;
+    let longest = 0;
+    while (r < s.length) {
+        const currChar = s[r];
+        if (!freqs.has(s[r])) {
+            freqs.set(s[r], 1);
+        } else {
+            freqs.set(s[r], freqs.get(s[r]) + 1);
+        }
+        const currRightCharFreq = freqs.get(s[r]);
+        currHighestFreq = Math.max(currHighestFreq, currRightCharFreq);
+        let replacementsNeeded = r - l + 1 - currHighestFreq;
+        // if not enough replacements, increment left pointer
+        // and update frequency map accordingly
+        while (replacementsNeeded > k) {
+            const currLeftCharFreq = freqs.get(s[l]) - 1;
+            currLeftCharFreq === 0 ? freqs.delete(s[l]) : freqs.set(s[l], currLeftCharFreq);
+            currHighestFreq = Math.max(currHighestFreq, currLeftCharFreq);
+            l++;
+            replacementsNeeded = r - l + 1 - currHighestFreq;
+        }
+        longest = Math.max(longest, r - l + 1);
+        r++;
+    }
+    return longest
+};
