@@ -1,0 +1,27 @@
+Time: O(n)
+Space: O(n), if all the brackets are open brackets.
+
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function (s) {
+    const open = [];
+    const map = { ')': '(', '}': '{', ']': '[' };
+    for (const bracket of s) {
+        switch (bracket) {
+            case '(':
+            case '{':
+            case '[':
+                open.push(bracket);
+                break;
+            default:
+                const popped = open.pop();
+                if (map[bracket] !== popped) {
+                    return false;
+                }
+        }
+    }
+    if (open.length > 0) return false;
+    return true;
+};
