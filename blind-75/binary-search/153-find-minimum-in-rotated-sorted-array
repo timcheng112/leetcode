@@ -1,0 +1,25 @@
+Time: O(logn)
+Space: O(1)
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findMin = function (nums) {
+    let lb = 0, rb = nums.length - 1, res = nums[0];
+    while (lb <= rb) {
+        if (nums[lb] < nums[rb]) {
+            res = Math.min(res, nums[lb])
+            break;
+        }
+        let mid = Math.floor((rb + lb) / 2);
+        res = Math.min(res, nums[mid])
+        // min is on the right
+        if (nums[mid] >= nums[lb]) {
+            lb = mid + 1;
+        } else { // min is on the left
+            rb = mid - 1;
+        }
+    }
+    return res;
+};
