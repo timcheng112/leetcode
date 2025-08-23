@@ -1,0 +1,22 @@
+Time: O(n) where n is the number of cells
+Space: O(1)
+
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var minimumArea = function (grid) {
+    let minL = Infinity, minR = -Infinity, minT = Infinity, minD = -Infinity;
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[0].length; j++) {
+            if (grid[i][j] === 0) continue;
+            minL = Math.min(minL, j);
+            minR = Math.max(minR, j);
+            minT = Math.min(minT, i);
+            minD = Math.max(minD, i);
+        }
+    }
+    const length = minR - minL + 1;
+    const width = minD - minT + 1;
+    return length * width
+};
