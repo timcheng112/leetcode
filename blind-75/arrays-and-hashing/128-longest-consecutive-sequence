@@ -1,0 +1,33 @@
+Time: O(n)
+Space: O(n)
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var longestConsecutive = function(nums) {
+    // 1. instantiate nums set
+    const set = new Set(nums);
+
+    // 2. iterate thru set
+    // for each num, check prev (-1) and next (+1) values
+    let longest = 0;
+    for (const num of nums) {
+        let streak = 1;
+        let i = 1;
+        while (set.has(num - i)) {
+            set.delete(num - i);
+            i++;
+            streak++;
+        }
+        i = 1;
+        while (set.has(num + i)) {
+            set.delete(num + i);
+            i++;
+            streak++;
+        }
+        set.delete(num);
+        longest = Math.max(streak, longest)
+    }
+    return longest
+};
