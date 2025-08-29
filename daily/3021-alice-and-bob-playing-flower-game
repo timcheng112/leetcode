@@ -1,4 +1,4 @@
-Time: O(n)
+Time: O(1)
 Space: O(1)
 
 /**
@@ -8,19 +8,15 @@ Space: O(1)
  */
 var flowerGame = function (n, m) {
     // if n - m is even, bob will win
-    // else, alice will win
-    let res = 0;
-    for (let x = 1; x <= n; x++) {
-        // if x is odd, y needs to be even
-        // if x is even, y needs to be odd
-        const add = Math.floor(m / 2);
-        if (x % 2 == 0 && m % 2 != 0) res += add + 1;
-        else res += add;
-    }
-    return res;
+    // else, alice will win (for n - m to be odd, case 1: n is even, m is odd; case 2: n is odd, m is even)
+    let nNumOdd = n % 2 != 0 ? Math.floor(n / 2) + 1 : Math.floor(n / 2);
+    let nNumEven = Math.floor(n / 2);
+    let mNumOdd = m % 2 != 0 ? Math.floor(m / 2) + 1 : Math.floor(m / 2);
+    let mNumEven = Math.floor(m / 2);
+    return nNumOdd * mNumEven + nNumEven * mNumOdd;
 };
 
-OR just solve it like this xd:
+OR to simplify it, just solve it like this:
 
 var flowerGame = function (n, m) {
     return Math.floor((n * m) / 2);
