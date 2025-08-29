@@ -1,0 +1,27 @@
+Time: O(n)
+Space: O(1)
+
+/**
+ * @param {number} n
+ * @param {number} m
+ * @return {number}
+ */
+var flowerGame = function (n, m) {
+    // if n - m is even, bob will win
+    // else, alice will win
+    let res = 0;
+    for (let x = 1; x <= n; x++) {
+        // if x is odd, y needs to be even
+        // if x is even, y needs to be odd
+        const add = Math.floor(m / 2);
+        if (x % 2 == 0 && m % 2 != 0) res += add + 1;
+        else res += add;
+    }
+    return res;
+};
+
+OR just solve it like this xd:
+
+var flowerGame = function (n, m) {
+    return Math.floor((n * m) / 2);
+};
