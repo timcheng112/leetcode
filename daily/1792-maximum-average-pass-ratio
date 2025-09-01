@@ -1,0 +1,90 @@
+Solved in Java to use PriorityQueue
+
+Time: O((n + k)log(n)), where n is the number of classes and k is the number of extraStudents
+                        every add into the PQ takes logn time
+Space: O(n)
+
+class Solution {
+    public double maxAverageRatio(int[][] classes, int extraStudents) {
+        PriorityQueue<ExamClass> pq = new PriorityQueue<>(
+                (a, b) -> Double.compare(b.getSwing(), a.getSwing()));
+
+        double sum = 0;
+        for (int i = 0; i < classes.length; i++) {
+            int pass = classes[i][0];
+            int total = classes[i][1];
+            double ratio = (double) pass / (double) total;
+            ExamClass ec = new ExamClass(ratio, pass, total);
+            pq.add(ec);
+            sum += ratio;
+        }
+
+        for (int i = 0; i < extraStudents; i++) {
+            ExamClass ec = pq.poll();
+            int pass = ec.getPass() + 1;
+            int total = ec.getTotal() + 1;
+            double oldRatio = ec.getRatio();
+
+            double newRatio = (double) pass / (double) total;
+
+            // update values
+            ec.setRatio(newRatio);
+            ec.incrementPass();
+            ec.incrementTotal();
+
+            // add back to queue
+            pq.add(ec);
+
+            // update sum
+            sum = sum - oldRatio + newRatio;
+        }
+
+        return sum / pq.size();
+    }
+
+    class ExamClass {
+        double ratio;
+        int pass;
+        int total;
+
+        ExamClass(double ratio, int pass, int total) {
+            this.ratio = ratio;
+            this.pass = pass;
+            this.total = total;
+        }
+
+        int getPass() {
+            return this.pass;
+        }
+
+        int getTotal() {
+            return this.total;
+        }
+
+        double getRatio() {
+            return this.ratio;
+        }
+
+        void setRatio(double ratio) {
+            this.ratio = ratio;
+        }
+
+        void incrementPass() {
+            this.pass++;
+        }
+
+        void incrementTotal() {
+            this.total++;
+        }
+
+        double getSwing() {
+            double newRatio = (double) (this.pass + 1) / (double) (this.total + 1);
+            return Math.min(newRatio - this.ratio, 1);
+        }
+
+        @Override
+        public String toString() {
+            return "Class has ratio of " + this.ratio;
+        }
+    }
+}
