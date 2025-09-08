@@ -1,0 +1,21 @@
+Time: O(nlogn), while loop takes O(n) time and in each iteration, it runs isNoZeroInteger which takes O(logn) time since a and b is of logn length.
+Space: O(1)
+
+/**
+ * @param {number} n
+ * @return {number[]}
+ */
+var getNoZeroIntegers = function (n) {
+    function isNoZeroInteger(num) {
+        return !num.toString().includes("0");
+    }
+
+    let i = 1;
+    while (i < n) {
+        const a = n - i;
+        const b = n - a;
+        if (isNoZeroInteger(a) && isNoZeroInteger(b)) return [a, b];
+        i++;
+    }
+    return [];
+};
