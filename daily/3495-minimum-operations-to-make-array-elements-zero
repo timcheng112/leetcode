@@ -1,0 +1,34 @@
+Time: O(nlogR), R is the maximum value of r in [l, r]
+Space: O(1)
+
+/**
+ * @param {number[][]} queries
+ * @return {number}
+ */
+var minOperations = function (queries) {
+    function rangeFreqs(l, r) {
+        let count = 0;
+        let x = 1;
+
+        while (true) {
+            const low = Math.pow(4, x - 1);
+            const high = Math.pow(4, x) - 1;
+            if (low > r) break; // stop when buckets are above r
+            
+            const overlapL = Math.max(l, low);
+            const overlapR = Math.min(r, high);
+            if (overlapL <= overlapR) {
+                count += x * (overlapR - overlapL + 1)
+            }
+            x++;
+        }
+        return count;
+    }
+
+    let min = 0;
+    for (let i = 0; i < queries.length; i++) {
+        const freqs = rangeFreqs(queries[i][0], queries[i][1]);
+        min += Math.ceil(freqs / 2);
+    }
+    return min;
+};
