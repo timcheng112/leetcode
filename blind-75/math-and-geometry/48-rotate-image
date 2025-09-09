@@ -1,0 +1,31 @@
+Time: O(n^2), matrix is n x n.
+Space: O(1)
+
+/**
+ * @param {number[][]} matrix
+ * @return {void} Do not return anything, modify matrix in-place instead.
+ */
+var rotate = function (matrix) {
+    // top -> right
+    // right -> bottom
+    // bottom -> left
+    // left -> top
+    const N = matrix.length;
+    let bounds = { lower: 0, upper: N - 1 }
+    while (bounds.lower < bounds.upper) {
+        let i = bounds.lower;
+        while (i < bounds.upper) {
+            let top = matrix[bounds.lower][i];
+            let right = matrix[i][bounds.upper];
+            let bot = matrix[bounds.upper][N - 1 - i];
+            let left = matrix[N - 1 - i][bounds.lower];
+            matrix[bounds.lower][i] = left;
+            matrix[i][bounds.upper] = top;
+            matrix[bounds.upper][N - 1 - i] = right;
+            matrix[N - 1 - i][bounds.lower] = bot;
+            i++;
+        }
+        bounds.lower++;
+        bounds.upper--;
+    }
+};
