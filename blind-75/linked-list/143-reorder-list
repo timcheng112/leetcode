@@ -1,0 +1,60 @@
+Time: O(n), where n is the total nodes in the list.
+Space: O(1)
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {void} Do not return anything, modify head in-place instead.
+ */
+var reorderList = function (head) {
+    function reverseList(curr, prev) {
+        if (!curr) return prev;
+        const next = curr.next;
+        curr.next = prev;
+        return reverseList(next, curr)
+    }
+    // find midpoint and then reverse it
+    // 0 1 2 3 4 5 even
+    // 0 5 1 4 2 3
+    // 0 1 2 3 4 5 6 odd
+    // 0 6 1 5 2 4 3
+    let slow = head;
+    let fast = head;
+    while (fast && fast.next) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    // reverse slow
+    let reversedHead = reverseList(slow.next);
+    slow.next = null;
+
+    // merge
+    // 0 1 2
+    // 6 5 4 3
+    function mergeTwoLists(pointer1, pointer2) {
+        let dummy = new ListNode;
+        let head = dummy;
+        while (pointer1 && pointer2) {
+            dummy.next = pointer1;
+            pointer1 = pointer1.next;
+            dummy = dummy.next;
+            dummy.next = pointer2;
+            pointer2 = pointer2.next;
+            dummy = dummy.next;
+        }
+        if (pointer1) {
+            dummy.next = pointer1;
+        } else if (pointer2) {
+            dummy.next = pointer2;
+        }
+        return head.next;
+    }
+
+    return mergeTwoLists(head, reversedHead);
+};
