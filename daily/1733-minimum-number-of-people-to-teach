@@ -1,0 +1,76 @@
+Time: O(m*k^2 + n), where m and n is the length of the friendships array and languages array respectively.
+      languages1.some iterates up to |languages1| (≈ k).
+Space: O(n + m).
+
+/**
+ * @param {number} n
+ * @param {number[][]} languages
+ * @param {number[][]} friendships
+ * @return {number}
+ */
+var minimumTeachings = function (n, languages, friendships) {
+    const cantTalk = [];
+    // O(m*n)
+    for (let i = 0; i < friendships.length; i++) {
+        const friend1 = friendships[i][0];
+        const friend2 = friendships[i][1];
+        const languages1 = languages[friend1 - 1];
+        const languages2 = languages[friend2 - 1];
+        if (languages1.some(language => languages2.includes(language))) continue;
+        cantTalk.push(friendships[i]);
+    }
+
+    // find most common language
+    const count = new Map();
+    const visited = new Set();
+    // O(m*k^2)
+    for (let i = 0; i < cantTalk.length; i++) {
+        const friend1 = cantTalk[i][0];
+        const friend2 = cantTalk[i][1];
+        const languages1 = languages[friend1 - 1];
+        const languages2 = languages[friend2 - 1];
+        if (!visited.has(friend1)) {
+            for (let j = 0; j < languages1.length; j++) {
+                count.set(languages1[j], count.has(languages1[j]) ? count.get(languages1[j]) + 1 : 1);
+            }
+            visited.add(friend1);
+        }
+        if (!visited.has(friend2)) {
+            for (let j = 0; j < languages2.length; j++) {
+                count.set(languages2[j], count.has(languages2[j]) ? count.get(languages2[j]) + 1 : 1);
+            }
+            visited.add(friend2);
+        }
+    }
+
+    let max = -Infinity;
+    let mostFrequentLanguage;
+    // O(n)
+    for (const [key, value] of count) {
+        if (value > max) {
+            max = value;
+            mostFrequentLanguage = key;
+        }
+    }
+
+    if (!mostFrequentLanguage) return 0;
+
+    visited.clear();
+    let min = 0;
+    // O(m*n)
+    for (let i = 0; i < cantTalk.length; i++) {
+        const friend1 = cantTalk[i][0];
+        const friend2 = cantTalk[i][1];
+        const languages1 = languages[friend1 - 1];
+        const languages2 = languages[friend2 - 1];
+        if (!visited.has(friend1) && !languages1.includes(mostFrequentLanguage)) {
+            min++;
+            visited.add(friend1)
+        }
+        if (!visited.has(friend2) && !languages2.includes(mostFrequentLanguage)) {
+            min++;
+            visited.add(friend2)
+        }
+    }
+    return min;
+};
