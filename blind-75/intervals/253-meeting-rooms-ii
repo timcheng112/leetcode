@@ -1,0 +1,48 @@
+Did it on lintcode since this is a premium leetcode question.
+https://www.lintcode.com/problem/919/record
+
+Time: O(nlogn), uses priority queue to lift smallest end time to top of queue in logn time.
+Space: O(n), priority queue can be of size n.
+
+/**
+ * Definition of Interval:
+ * public class Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param intervals: an array of meeting time intervals
+     * @return: the minimum number of conference rooms required
+     */
+    public int minMeetingRooms(List<Interval> intervals) {
+        if (intervals.size() == 0) return 0;
+        PriorityQueue<Interval> pq = new PriorityQueue<>((a, b) -> a.end - b.end);
+        Collections.sort(intervals, new MyComparator());
+        pq.add(intervals.get(0));
+        for (int i = 1; i < intervals.size(); i++) {
+            Interval peeked = pq.peek();
+            if (peeked != null && intervals.get(i).start >= peeked.end) {
+                pq.poll();
+                pq.add(intervals.get(i));
+                continue;
+            }
+            if (intervals.get(i).start < intervals.get(i - 1).end) {
+                pq.add(intervals.get(i));
+            }
+        }
+        return pq.size();
+    }
+}
+
+class MyComparator implements Comparator<Interval> {
+    @Override
+    public int compare(Interval i1, Interval i2) {
+        return Integer.compare(i1.start, i2.start); 
+    }
+}
