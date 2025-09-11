@@ -1,0 +1,31 @@
+Time: O(nlogn)
+Space: O(1) auxiliary since vowels array and set is at most 10 characters, O(n) output.
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var sortVowels = function (s) {
+    // get vowels
+    const vowels = [];
+    const vowelSet = new Set(['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']);
+    for (let c of s) {
+        if (vowelSet.has(c)) {
+            vowels.push(c);
+        };
+    }
+    vowels.sort();
+
+    // replace vowels according to vowels[] order
+    let j = 0;
+    let res = "";
+    for (let i = 0; i < s.length; i++) {
+        if (vowelSet.has(s[i])) {
+            res += vowels[j]
+            j++;
+        } else {
+            res += s[i];
+        }
+    }
+    return res;
+};
