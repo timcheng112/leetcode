@@ -1,0 +1,19 @@
+// Lol just a brain teaser question
+
+Time: O(n)
+Space: O(1)
+
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var doesAliceWin = function(s) {
+    // count vowels
+    const VOWELS = new Set(['a', 'e', 'i', 'o', 'u']);
+    for (let c of s) {
+        if (VOWELS.has(c)) return true;
+    }
+
+    // if no vowels, alice loses
+    return false;
+};
