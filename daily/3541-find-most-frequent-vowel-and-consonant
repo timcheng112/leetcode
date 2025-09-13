@@ -1,0 +1,23 @@
+Time: O(n)
+Space: O(1), at most 26 characters. VOWELS has at most 5 items, CONSONANTS has at most 21 items.
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var maxFreqSum = function (s) {
+    const VOWELS = { 'a': 0, 'e': 0, 'i': 0, 'o': 0, 'u': 0 };
+    const CONSONANTS = {};
+    let maxVowelFreq = 0;
+    let maxConsonantFreq = 0;
+    for (let c of s) {
+        if (VOWELS[c] != null) {
+            VOWELS[c] += 1
+            maxVowelFreq = Math.max(VOWELS[c], maxVowelFreq)
+        } else {
+            CONSONANTS[c] = CONSONANTS[c] ? CONSONANTS[c] + 1 : 1;
+            maxConsonantFreq = Math.max(CONSONANTS[c], maxConsonantFreq)
+        };
+    }
+    return maxVowelFreq + maxConsonantFreq;
+};
