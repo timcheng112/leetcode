@@ -1,0 +1,46 @@
+Time: O(n), where n is the length of queries, each word is at most 7 characters long so replace() will take O(1) time.
+Space: O(m), where m is the length of wordlist.
+
+/**
+ * @param {string[]} wordlist
+ * @param {string[]} queries
+ * @return {string[]}
+ */
+var spellchecker = function (wordlist, queries) {
+    const unchanged = new Set(wordlist);
+    const lowcaps = new Map();
+    const replacements = new Map();
+    for (let word of wordlist) {
+        const lowcap = word.toLowerCase();
+        if (!lowcaps.has(lowcap)) {
+            lowcaps.set(lowcap, word);
+        }
+    }
+    const regex = /[aeiouAEIOU]/g;
+    for (let word of wordlist) {
+        const replacement = word.replace(regex, "1").toLowerCase();
+        if (!replacements.has(replacement)) {
+            replacements.set(replacement, word);
+        }
+    }
+    const answer = [];
+    for (let query of queries) {
+        // has word - matches exactly including caps
+        if (unchanged.has(query)) {
+            answer.push(query);
+        }
+        // has word - matches exactly excluding caps
+        else if (lowcaps.has(query.toLowerCase())) {
+            answer.push(lowcaps.get(query.toLowerCase()));
+        }
+        // has word after vowel replacement
+        else if (replacements.has(query.replace(regex, "1").toLowerCase())) {
+            answer.push(replacements.get(query.replace(regex, "1").toLowerCase()));
+        }
+        // no match
+        else {
+            answer.push("");
+        }
+    }
+    return answer;
+};
