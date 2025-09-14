@@ -10,14 +10,12 @@ var spellchecker = function (wordlist, queries) {
     const unchanged = new Set(wordlist);
     const lowcaps = new Map();
     const replacements = new Map();
+    const regex = /[aeiouAEIOU]/g;
     for (let word of wordlist) {
         const lowcap = word.toLowerCase();
         if (!lowcaps.has(lowcap)) {
             lowcaps.set(lowcap, word);
         }
-    }
-    const regex = /[aeiouAEIOU]/g;
-    for (let word of wordlist) {
         const replacement = word.replace(regex, "1").toLowerCase();
         if (!replacements.has(replacement)) {
             replacements.set(replacement, word);
