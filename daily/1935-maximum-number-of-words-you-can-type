@@ -1,0 +1,50 @@
+Time: O(n)
+Space: O(n)
+
+/**
+ * @param {string} text
+ * @param {string} brokenLetters
+ * @return {number}
+ */
+var canBeTypedWords = function (text, brokenLetters) {
+    const regex = new RegExp(`[${brokenLetters}]`, "g");
+    const words = text.split(" ");
+    let count = 0;
+    for (let word of words) {
+        const res = word.match(regex)
+        if (!res) count++;
+    }
+    return count;
+};
+
+Time: O(n)
+Space: O(1)
+
+/**
+ * @param {string} text
+ * @param {string} brokenLetters
+ * @return {number}
+ */
+var canBeTypedWords = function (text, brokenLetters) {
+    const broken = new Set(brokenLetters);
+    let flag = false;
+    let count = 0;
+    for (let i = 0; i < text.length; i++) {
+        // reset
+        if (text[i] === " ") {
+            if (!flag) {
+                count++;
+            }
+            flag = false;
+            continue;
+        }
+        if (flag) {
+            continue;
+        }
+        if (broken.has(text[i])) {
+            flag = true;
+        }
+    }
+    if (!flag) count++;
+    return count;
+};
