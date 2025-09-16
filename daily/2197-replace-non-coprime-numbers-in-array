@@ -1,0 +1,41 @@
+Time: O(n^2)
+Space: O(1) auxiliary, O(m) output
+
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var replaceNonCoprimes = function (nums) {
+    // euclidean algo
+    function getGCD(x, y) {
+        while (y !== 0) {
+            let tmp = y;
+            y = x % y;
+            x = tmp;
+        }
+        return x;
+    }
+
+    let i = 0;
+    let res = [nums[0]];
+    for (let i = 1; i < nums.length; i++) {
+        const x = res[res.length - 1], y = nums[i];
+        let GCD = getGCD(x, y);
+        if (GCD > 1) {
+            let LCM = (x / GCD) * y;
+            while (res.length > 0) {
+                GCD = getGCD(LCM, res[res.length - 1]);
+                if (GCD > 1) {
+                    LCM = (LCM / GCD) * res[res.length - 1];
+                    res.pop();
+                    continue;
+                }
+                break;
+            }
+            res.push(LCM);
+        } else {
+            res.push(y);
+        }
+    }
+    return res;
+};
