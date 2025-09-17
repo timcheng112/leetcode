@@ -1,4 +1,4 @@
-Time: O(mlogn) if m > n, m is the number of changeRating operations, else if n > m then O(n).
+Time: O(mlogn) if mlogn > n, m is the number of operations, else O(n).
 Space: O(n).
 
 // have a map foods that points to the specific Food object
@@ -34,7 +34,7 @@ class FoodRatings {
         set.add(temp);
     }
 
-    // O(1)
+    // O(logn)
     public String highestRated(String cuisine) {
         return this.cuisines.get(cuisine).first().name;
     }
