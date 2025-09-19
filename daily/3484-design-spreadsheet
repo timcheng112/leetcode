@@ -1,0 +1,82 @@
+Time: O(1), all the operations are O(1) as substring and split functions would not take too long since the string is very short.
+Space: O(n), if all the cells have been set where n is number of rows.
+
+class Spreadsheet {
+
+    List<List<Integer>> rows;
+    Set<String> set;
+
+    // O(n)
+    public Spreadsheet(int rows) {
+        this.rows = new ArrayList<>(rows);
+        for (int i = 0; i < rows; i++) {
+            List<Integer> rowList = new ArrayList<>(26);
+            for (int j = 0; j < 26; j++) {
+                rowList.add(0);
+            }
+            this.rows.add(rowList);
+        }
+        this.set = new HashSet<>();
+    }
+
+    // O(1)
+    public void setCell(String cell, int value) {
+        int col = cell.codePointAt(0) - 65;
+        int row = Integer.parseInt(cell.substring(1)) - 1;
+        this.rows.get(row).set(col, value);
+        this.set.add(cell);
+    }
+
+    // O(1)
+    public void resetCell(String cell) {
+        int col = cell.codePointAt(0) - 65;
+        int row = Integer.parseInt(cell.substring(1)) - 1;
+        this.rows.get(row).set(col, 0);
+    }
+
+    // O(1)
+    public int getValue(String formula) {
+        int X;
+        int Y;
+        int splitIndex = formula.indexOf("+");
+        String left = formula.substring(1, splitIndex);
+        String right = formula.substring(splitIndex + 1);
+        if (isCell(left)) {
+            X = !hasBeenSet(left) ? 0 : getCellValue(left);
+        } else {
+            X = Integer.parseInt(left);
+        }
+
+        if (isCell(right)) {
+            Y = !hasBeenSet(right) ? 0 : getCellValue(right);
+        } else {
+            Y = Integer.parseInt(right);
+        }
+        return X + Y;
+    }
+
+    // O(1)
+    public boolean isCell(String str) {
+        return str.codePointAt(0) >= 65 && str.codePointAt(0) <= 90;
+    }
+
+    // O(1)
+    public int getCellValue(String cell) {
+        int col = cell.codePointAt(0) - 65;
+        int row = Integer.parseInt(cell.substring(1)) - 1;
+        return this.rows.get(row).get(col);
+    }
+
+    // O(1)
+    public boolean hasBeenSet(String cell) {
+        return this.set.contains(cell);
+    }
+}
+
+/**
+ * Your Spreadsheet object will be instantiated and called as such:
+ * Spreadsheet obj = new Spreadsheet(rows);
+ * obj.setCell(cell,value);
+ * obj.resetCell(cell);
+ * int param_3 = obj.getValue(formula);
+ */
