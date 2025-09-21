@@ -1,0 +1,133 @@
+Time: Can refer to the comments of each function.
+Space: O(n)
+
+class MovieRentingSystem {
+    Map<Integer, TreeSet<Movie>> availShops; // key is movie
+    Map<Integer, Map<Integer, Movie>> unrented; // key is shop, and key of map value is movie id
+    Map<String, Movie> rentedLookup;
+    TreeSet<Movie> rented;
+
+    // O(nlogn), need to sort the tree during each insertion
+    public MovieRentingSystem(int n, int[][] entries) {
+        this.availShops = new HashMap<>();
+        this.unrented = new HashMap<>();
+        for (int i = 0; i < entries.length; i++) {
+            int shop = entries[i][0];
+            int movie = entries[i][1];
+            int price = entries[i][2];
+            Movie curr = new Movie(shop, movie, price);
+            if (this.availShops.containsKey(movie)) {
+                this.availShops.get(movie).add(curr);
+            } else {
+                TreeSet<Movie> treeset = new TreeSet<>((a, b) -> {
+                    if (a.price != b.price) {
+                        return a.price - b.price;
+                    }
+                    return a.shop - b.shop;
+                });
+                treeset.add(curr);
+                this.availShops.put(movie, treeset);
+            }
+            if (this.unrented.containsKey(shop)) {
+                this.unrented.get(shop).put(movie, curr);
+            } else {
+                Map<Integer, Movie> map = new HashMap<>();
+                map.put(movie, curr);
+                this.unrented.put(shop, map);
+            }
+        }
+        this.rentedLookup = new HashMap<>();
+        this.rented = new TreeSet<>((a, b) -> {
+            if (a.price != b.price) {
+                return a.price - b.price;
+            }
+            if (a.shop != b.shop) {
+                return a.shop - b.shop;
+            }
+            return a.movie - b.movie;
+        });
+    }
+
+    // O(1), iterates list at most 5 times.
+    public List<Integer> search(int movie) {
+        List<Integer> list = new ArrayList<>();
+        TreeSet<Movie> movies = this.availShops.get(movie);
+        if (movies == null) return new ArrayList<Integer>();
+        for (Movie curr : movies) {
+            list.add(curr.shop);
+            if (list.size() == 5) {
+                break;
+            }
+        }
+        return list;
+    }
+
+    // O(logn), treeset removal and insertion takes logn time.
+    public void rent(int shop, int movie) {
+        // find the movie
+        Map<Integer, Movie> availShop = this.unrented.get(shop);
+        Movie availMovie = availShop.get(movie);
+
+        // need to do the necessary removals and insertions
+        this.unrented.get(shop).remove(movie);
+        this.availShops.get(movie).remove(availMovie);
+
+        String key = shop + "-" + movie;
+        this.rentedLookup.put(key, availMovie);
+        this.rented.add(availMovie);
+    }
+
+    // O(logn), treeset removal and insertion takes logn time
+    public void drop(int shop, int movie) {
+        // retrieve movie
+        String key = shop + "-" + movie;
+        Movie droppedMovie = this.rentedLookup.get(key);
+
+        // do the necessary removals and insertions
+        this.rentedLookup.remove(key);
+        this.rented.remove(droppedMovie);
+        this.availShops.get(movie).add(droppedMovie);
+        this.unrented.get(shop).put(movie, droppedMovie);
+    }
+
+    // O(logn), to find the first element in the treeset, it takes logn time. The next few iterations take O(1) constant time.
+    public List<List<Integer>> report() {
+        List<List<Integer>> list = new ArrayList<List<Integer>>();
+        for (Movie curr : this.rented) {
+            List<Integer> res = new ArrayList<>();
+            res.add(curr.shop);
+            res.add(curr.movie);
+            list.add(res);
+            if (list.size() == 5) {
+                break;
+            }
+        }
+        return list;
+    }
+}
+
+class Movie {
+    int shop;
+    int movie;
+    int price;
+
+    Movie(int shop, int movie, int price) {
+        this.shop = shop;
+        this.movie = movie;
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "shop: " + shop + "; movie: " + movie + "; price: " + price + "\n";
+    }
+}
+
+/**
+ * Your MovieRentingSystem object will be instantiated and called as such:
+ * MovieRentingSystem obj = new MovieRentingSystem(n, entries);
+ * List<Integer> param_1 = obj.search(movie);
+ * obj.rent(shop,movie);
+ * obj.drop(shop,movie);
+ * List<List<Integer>> param_4 = obj.report();
+ */
