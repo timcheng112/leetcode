@@ -1,0 +1,39 @@
+Time: O(n)
+Space: O(n)
+
+/**
+ * @param {number} numerator
+ * @param {number} denominator
+ * @return {string}
+ */
+var fractionToDecimal = function (numerator, denominator) {
+    let remainder = numerator % denominator;
+    const map = new Map();
+    let result = ""
+    // perform long division until same remainder is met or remainder === 0
+    while (remainder !== 0) {
+        if (map.has(remainder)) {
+            break;
+        }
+        map.set(remainder, result.length);
+        remainder *= 10;
+        const digit = (remainder / denominator) >= 0
+            ? Math.floor(remainder / denominator)
+            : Math.ceil(remainder / denominator);
+        result += Math.abs(digit);
+        remainder %= denominator;
+    }
+    // form result string
+    const startIndex = map.get(remainder);
+    if (startIndex != null) {
+        result = result.substring(0, startIndex) + "(" + result.substring(startIndex) + ")"
+    }
+    let frontPart = (numerator / denominator) >= 0
+        ? Math.floor(numerator / denominator)
+        : Math.ceil(numerator / denominator)
+    if (Math.ceil(numerator / denominator) === 0 && numerator / denominator < 0) {
+        frontPart = "-" + frontPart;
+    }
+    result = result.length > 0 ? `${frontPart}.${result}` : `${frontPart}`;
+    return result
+}
