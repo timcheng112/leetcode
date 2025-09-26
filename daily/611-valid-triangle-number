@@ -1,0 +1,25 @@
+Time: O(n^2), similar to 3sum problem
+Space: O(1)
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var triangleNumber = function (nums) {
+    // a triangle is valid if a + b > c
+    nums.sort((a, b) => a - b)
+    let count = 0;
+    for (let c = nums.length - 1; c >= 2; c--) {
+        let a = 0;
+        let b = c - 1;
+        while (a < b) {
+            if (nums[a] + nums[b] > nums[c]) {
+                count += b - a;
+                b--;
+            } else {
+                a++;
+            }
+        }
+    }
+    return count;
+};
