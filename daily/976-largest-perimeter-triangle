@@ -1,0 +1,27 @@
+Time: O(nlogn), greedy approach
+Space: O(1)
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var largestPerimeter = function (nums) {
+    function isTriangle(a, b, c) {
+        return a + b > c
+    }
+
+    nums.sort((a, b) => b - a);
+
+    for (let i = 0; i < nums.length - 2; i++) {
+        const a = nums[i + 2];
+        const b = nums[i + 1];
+        const c = nums[i];
+        if (isTriangle(a, b, c)) return a + b + c;
+    }
+    return 0;
+};
+
+// 3, 2, 3, 4
+// 4, 3, 3, 2
+// c = 4, a = 3, b = 2
+// a +
