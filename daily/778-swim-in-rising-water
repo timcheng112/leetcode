@@ -1,0 +1,46 @@
+Time: O(n^2 * logn), where the grid is n * n
+Space: O(n^2), visited and queue data structures could hold n^2 cells.
+
+class Solution {
+    public int swimInWater(int[][] grid) {
+        int ROWS = grid.length;
+        int COLS = grid[0].length;
+        PriorityQueue<MyNode> queue = new PriorityQueue<MyNode>((a, b) -> {
+            return a.value - b.value;
+        });
+        queue.add(new MyNode(grid[0][0], 0, 0));
+        boolean[][] visited = new boolean[ROWS][COLS];
+        int[][] directions = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+        while (!queue.isEmpty()) {
+            MyNode curr = queue.poll();
+            if (curr.r == ROWS - 1 && curr.c == COLS - 1) {
+                return curr.value;
+            }
+            if (visited[curr.r][curr.c]) {
+                continue;
+            }
+            visited[curr.r][curr.c] = true;
+
+            for (int[] direction : directions) {
+                int nr = curr.r + direction[0];
+                int nc = curr.c + direction[1];
+                if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS || visited[nr][nc]) {
+                    continue;
+                }
+                int newVal = Math.max(curr.value, grid[nr][nc]);
+                queue.add(new MyNode(newVal, nr, nc));
+            }
+        }
+        return 0;
+    }
+}
+
+class MyNode {
+    int value, r, c;
+
+    public MyNode(int value, int r, int c) {
+        this.value = value;
+        this.r = r;
+        this.c = c;
+    }
+}
