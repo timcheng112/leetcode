@@ -1,5 +1,5 @@
-Time: O(nlogn)
-Space: O(1) auxiliary, O(n) output.
+Time: O((m + n)logn), m and n is the number of spells and potions respectively.
+Space: O(1) auxiliary, O(m) output.
 
 /**
  * @param {number[]} spells
